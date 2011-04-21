@@ -6,7 +6,8 @@ bedroom in our new apartment. First node to find the big bedroom wins!
  it gets the job done though)
 """
 
-import random
+#import random
+import numpy.random as random
 import pygame
 
 def main():
@@ -32,7 +33,6 @@ class Apartment():
         # Sets up roomates and map.
         STARTx = 250
         STARTy = 410
-
         self.node1 = {'x': STARTx, 'y': STARTy, 'name': name1, 'trail': [(250,400)]}
         self.node2 = {'x': STARTx, 'y': STARTy, 'name': name2, 'trail': [(250,400)]}
         self.Map = ((70,70),(570,70), (570, 410), (70, 410))
@@ -43,11 +43,9 @@ class Apartment():
         self.window = pygame.display.set_mode((640, 480))
 
     def Victory(self):
-        if self.victory_square[0] <= self.node1['x'] <= self.victory_square[2] \
-        and self.victory_square[1] <= self.node1['y'] <= self.victory_square[3]:
+        if self.vict_rect.collidepoint(self.node1['x'], self.node1['y']):
             return self.node1['name']
-        if self.victory_square[0] <= self.node2['x'] <= self.victory_square[2] \
-        and self.victory_square[1] <= self.node2['y'] <= self.victory_square[3]:
+        if self.vict_rect.collidepoint(self.node2['x'], self.node2['y']):
             return self.node2['name']
         else:
             return False
@@ -75,14 +73,20 @@ class Apartment():
         self.node1['trail'].append((self.node1['x'],self.node1['y']))
         self.node2['trail'].append((self.node2['x'],self.node2['y']))
 
-        move = self.node1['x'] + random.randint(-5, 5)
-        self.node1['x'] = 70 < move < 570 and move or self.node1['x']
-        move = self.node1['y'] + random.randint(-5, 5)
-        self.node1['y'] = 70 < move < 410 and move or self.node1['y']
-        move = self.node1['x'] + random.randint(-5, 5)
-        self.node2['x'] = 70 < move < 570 and move or self.node2['x']
-        move = self.node2['y'] + random.randint(-5, 5)
-        self.node2['y'] = 70 < move < 410 and move or self.node2['y']
+        # This might need to be more random. The nodes seem to mirror eachother
+        # A lot.
+        rands = random.random_integers(-5, 5, 4)
+        
+        f = lambda old,lower,upper,new: lower < new < upper and new or old
+        
+        new = self.node1['x'] + rands[0]
+        self.node1['x'] = f(self.node1['x'],70,570,new)
+        new = self.node1['y'] + rands[1]
+        self.node1['y'] = f(self.node1['y'],70,410,new)
+        new = self.node2['x'] + rands[2]
+        self.node2['x'] = f(self.node2['x'],70,570,new)
+        new = self.node2['y'] + rands[3]
+        self.node2['y'] = f(self.node2['y'],70,410,new)
 
 if __name__ == '__main__':
     main()

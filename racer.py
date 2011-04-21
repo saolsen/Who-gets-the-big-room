@@ -30,13 +30,12 @@ def main():
 class Apartment():
 
     def __init__(self, name1, name2):
-        # Sets up roomates and map.
+        # Sets up roomates and map
         STARTx = 250
         STARTy = 410
         self.node1 = {'x': STARTx, 'y': STARTy, 'name': name1, 'trail': [(250,400)]}
         self.node2 = {'x': STARTx, 'y': STARTy, 'name': name2, 'trail': [(250,400)]}
-        self.Map = ((70,70),(570,70), (570, 410), (70, 410))
-        self.victory_square = (70,70,120,120)      
+        self.Map = ((70,70),(570,70),(570,410),(70,410))
         self.vict_rect = pygame.Rect(70, 70, 50, 50)
         # Draw stuff 
         pygame.init()
@@ -68,15 +67,15 @@ class Apartment():
         pygame.display.flip()
 
     def Step(self):
-        # Takes two random steps, makes sure that they aren't stepping into
-        # walls.
+        # Takes two random steps, makes sure they dont step into walls
+        # Save last positions
         self.node1['trail'].append((self.node1['x'],self.node1['y']))
         self.node2['trail'].append((self.node2['x'],self.node2['y']))
 
-        # This might need to be more random. The nodes seem to mirror eachother
-        # A lot.
+        # Generate random numbers
         rands = random.random_integers(-5, 5, 4)
         
+        # Collision detection for the boarders
         f = lambda old,lower,upper,new: lower < new < upper and new or old
         
         new = self.node1['x'] + rands[0]
